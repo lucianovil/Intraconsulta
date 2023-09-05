@@ -55,14 +55,24 @@ public class Universidad {
 		Alumno alumno = this.buscarAlumnoPorDni(dni);
 		Materia materia = this.buscarMateriaPorCodigo(codigo);
 		
-		if (alumno != null && materia != null) {
-			
-		    InscripcionMateria  inscripcionMateria = new InscripcionMateria (alumno,materia);
-			return this.inscripcionesMateria.add(inscripcionMateria );
-			
+		if (alumno == null || materia == null) {
+			return false;
 		}
 		
-		return false;
+		
+		ArrayList<Materia> correlativas = materia.getCorrelativas();
+		for(int i = 0; i < correlativas.size(); i++) {
+			Materia correlativa = correlativas.get(i);
+			if(!estaAprobado(dni, correlativa.getCodigo()))
+				return false;
+		}
+		
+	    InscripcionMateria  inscripcionMateria = new InscripcionMateria (alumno,materia);
+		return this.inscripcionesMateria.add(inscripcionMateria );
+		
+	
+		
+
 	}
 
 	private Materia buscarMateriaPorCodigo(Integer codigo) {
@@ -113,12 +123,22 @@ public class Universidad {
 		return true;
 	    
 	}
-	
+
 	public Nota getNota(Integer dni, Integer codigo) {
-		Alumno alumno = this.buscarAlumnoPorDni(dni);
-		Materia materia = this.buscarMateriaPorCodigo(codigo);
 		InscripcionMateria ins = getInscripcion(dni, codigo);
 		return ins.getNota();
+	}
+	
+	
+	public boolean estaAprobado(Integer dni, Integer codigo) {
+		Nota nota = getNota(dni, codigo);
+		
+		if (nota == null) {
+			return false;
+		}
+		
+		Integer valor = nota.getValor();
+		return valor >= 4;
 	}
 
 		

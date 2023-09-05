@@ -53,7 +53,7 @@ public class TestUniversidad {
 	
 	
 	@Test
-	public void queSePuedaInscribirUnAlumnoenMateria() {
+	public void queSePuedaInscribirUnAlumnoenMateriaSinCorrelativas() {
 		String  nombre = "Unlam";
     	Universidad unlam = new Universidad (nombre);
     	nombre = "PB2 ";
@@ -144,21 +144,98 @@ public class TestUniversidad {
 	@Test
 	public void queSePuedaSaberSiUnAlumnoAproboUnaDeterminadaMateria() {
 
+		String  nombre = "Unlam";
+    	Universidad unlam = new Universidad (nombre);
     	
+    	nombre = "PB1";
+        Integer codigo = 1;
+        Materia pb1 = new Materia (codigo, nombre);
         
+        unlam.registraMateria(pb1);
         
-		
+     	nombre = "Marta";
+    	String apellido = "perez";
+    	Integer dni= 44555; 
+        Alumno alumno = new Alumno (dni,apellido, nombre);
+    	unlam.registrar(alumno);
+    	unlam.inscribirAlumnoAUnaMateria(dni,codigo);
+    	
+    	Nota nota = new Nota(9);
+    	unlam.calificar(dni, codigo, nota);
+    	
+    	assertTrue(unlam.estaAprobado(dni, codigo));
+    			
 	}
 	
 	
 	@Test
 	public void queSeNoPuedaInscribirAUnAlumnoSiAdeudaLaCorrelativa() {
-		
+		String  nombre = "Unlam";
+    	Universidad unlam = new Universidad (nombre);
+    	
+    	nombre = "PB1";
+        Integer codigo = 1;
+        Materia pb1 = new Materia (codigo, nombre);
+        
+        unlam.registraMateria(pb1);
+        
+        nombre = "PB2";
+        codigo = 2;
+        ArrayList<Materia> correlativas = new ArrayList<>();
+        correlativas.add(pb1);
+        Materia pb2 = new Materia (codigo, nombre);
+        
+        pb2.agregarCorrelativa(pb1);
+        unlam.registraMateria(pb2);
+        
+        nombre = "Marta";
+    	String apellido = "perez";
+    	Integer dni= 44555; 
+        Alumno alumno = new Alumno (dni,apellido, nombre);
+    	unlam.registrar(alumno);
+    	
+    	unlam.inscribirAlumnoAUnaMateria(dni,1);
+    	
+    	
+    	
+    	assertFalse(unlam.inscribirAlumnoAUnaMateria(dni,2)) ;
 	}
 	
 	
 	@Test
 	public void queSePuedaInscribirAUnAlumnoALaCorrelativa() {
+		
+		String  nombre = "Unlam";
+    	Universidad unlam = new Universidad (nombre);
+    	
+    	nombre = "PB1";
+        Integer codigo = 1;
+        Materia pb1 = new Materia (codigo, nombre);
+        
+        unlam.registraMateria(pb1);
+        
+        nombre = "PB2";
+        codigo = 2;
+        ArrayList<Materia> correlativas = new ArrayList<>();
+        correlativas.add(pb1);
+        Materia pb2 = new Materia (codigo, nombre);
+        
+        pb2.agregarCorrelativa(pb1);
+        unlam.registraMateria(pb2);
+        
+        nombre = "Marta";
+    	String apellido = "perez";
+    	Integer dni= 44555; 
+        Alumno alumno = new Alumno (dni,apellido, nombre);
+    	unlam.registrar(alumno);
+    	
+    	unlam.inscribirAlumnoAUnaMateria(dni,1);
+    	
+    	Nota nota = new Nota(9);
+    	unlam.calificar(dni, 1, nota);
+    	
+    	
+    	assertTrue(unlam.inscribirAlumnoAUnaMateria(dni,2)) ;
 		
 	}
 	
